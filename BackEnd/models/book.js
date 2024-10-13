@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+const { Schema } = mongoose; 
+
 const bookSchema = new mongoose.Schema({
 
   title: {
@@ -32,8 +34,12 @@ const bookSchema = new mongoose.Schema({
   category: {
     type: String,  
     required: true
-  }
+  },
+
+    books: [{type: mongoose.Schema.Types.ObjectId,ref: 'User'}]
+
 });
 
 const Book = mongoose.model('Book', bookSchema);
+
 export default Book;

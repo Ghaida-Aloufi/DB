@@ -2,6 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import Book from "./models/book.js"; 
 import dotenv from 'dotenv';
+import User from "./models/userSchema.js";
+import bcrypt from 'bcrypt'
+
 dotenv.config();
 
 const app = express();
@@ -14,6 +17,37 @@ async function main() {
 
   
 }
+
+
+
+app.post('/signup', async (req, res) => { 
+
+ 
+ const { username, email, password } = req.body; 
+
+ 
+ const existingUser = await User.findOne({ email }); 
+
+ if (existingUser) { 
+
+ return res.status(400).json({ message: 'Email already in use' }); 
+
+ }
+ const hashedPassword = await bcrypt.hash(password, 10); 
+
+ const newUser = new User({ 
+
+ username, 
+
+ email, 
+
+ password: hashedPassword 
+
+ }); 
+
+ await newUser.save(); 
+
+ }); 
 
 
 app.post("/addBook", (req, res) => {
@@ -63,5 +97,6 @@ app.patch("/addBook/:id",(req,res)=>{
 
 
 app.listen(8000, () => {
-  console.log('Server is running on ');
+  console.log('Server is running on port 8000');
+
 });
